@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">PaintActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_sin">sinActivity</string>
+    <string name="title_activity_realtime">realtime</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_bluetooth">bluetooth</string>
+    <string name="title_activity_wlacznik_activity">wlacznik_activity</string>
+</resources>

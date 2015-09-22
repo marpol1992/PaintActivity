@@ -1,0 +1,5 @@
+<root>
+    <item name='com.jjoe64.graphview.series.LineGraphSeries'>
+        <annotation name='java.lang.annotation.Deprecated' />
+    </item>
+</root>
