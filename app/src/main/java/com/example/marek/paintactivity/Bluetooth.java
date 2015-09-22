@@ -77,8 +77,9 @@ public class Bluetooth extends Activity implements OnItemClickListener {
             getPairedDevices();
             startDiscovery();
         }
-
     }
+
+
 
 
     private void startDiscovery() {
@@ -129,9 +130,10 @@ public class Bluetooth extends Activity implements OnItemClickListener {
                             break;
                         }
                     }
-                    listAdapter.add(device.getName()+" "+s+" "+"\n"+device.getAddress());
+                    listAdapter.add(device.getName() + " " + s + " " + "\n" + device.getAddress());
 
-                }else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)){
+                }
+                else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)){
 
                 }else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)){
 
@@ -150,6 +152,7 @@ public class Bluetooth extends Activity implements OnItemClickListener {
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         registerReceiver(receiver, filter);
         filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+;
     }
 
     @Override

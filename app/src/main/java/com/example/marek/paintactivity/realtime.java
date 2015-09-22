@@ -162,7 +162,8 @@ public class realtime extends ActionBarActivity {
 
                 }
                 nSeries2.appendData(new DataPoint(graph2LastXValue,processing_Frame.point), true, 1000);
-
+                read1.setText(Boolean.toString(START_GRAPH));
+                read.setText(Integer.toString(processing_Frame.Error_count));
                 nHandler.postDelayed(this, 1);
             }
         };

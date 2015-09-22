@@ -2,8 +2,12 @@ package com.example.marek.paintactivity;
 
 import android.app.ActionBar;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
@@ -24,7 +28,7 @@ public class PaintActivity extends ActionBarActivity
 {
     MenuItem bluetoothStatusItem;
     boolean status;
-    Handler lHandler;
+/*    Handler lHandler;
     {
         lHandler = new Handler() {
             @Override
@@ -46,7 +50,7 @@ public class PaintActivity extends ActionBarActivity
             }
 
         };
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,15 +58,38 @@ public class PaintActivity extends ActionBarActivity
         setContentView(R.layout.activity_paint);
         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         startActivityForResult(intent, 1);
-        ProcessingFrame.get_handler(lHandler);
+       // ProcessingFrame.get_handler(lHandler);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setLogo(R.mipmap.ic_launcher);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
+        IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
+        IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+        IntentFilter filter3 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        this.registerReceiver(BTReceiver, filter1);
+        this.registerReceiver(BTReceiver, filter2);
+        this.registerReceiver(BTReceiver, filter3);
 
     }
+    private final BroadcastReceiver BTReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
 
+            if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
+                //Do something if connected
+                bluetoothStatusItem.setIcon(R.drawable.ic_bluetooth_connected_black_24dp);
+                Toast.makeText(getApplicationContext(), "BT Connected", Toast.LENGTH_SHORT).show();
+            }
+            else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+                //Do something if disconnected
+                bluetoothStatusItem.setIcon(R.drawable.ic_bluetooth_disabled_black_24dp);
+                Toast.makeText(getApplicationContext(), "BT Disconnected", Toast.LENGTH_SHORT).show();
+            }
+            //else if...
+        }
+    };
   /*  @Override
     public void onResume() {
         super.onResume();
