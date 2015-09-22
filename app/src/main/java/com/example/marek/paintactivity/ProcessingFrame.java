@@ -4,8 +4,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-/**
- * Created by marek on 2015-09-16.
+/*
+  Created by marek on 2015-09-16.
  */
  class ProcessingFrame extends Thread {
 
@@ -53,17 +53,16 @@ import android.util.Log;
     public void run() {
         while(SET_THREAD){
             if ((bytes_all>=4)) {
-                mlody_bajt = convertByte(bufer[0]);
-                stary_bajt = convertByte(bufer[1]);
+                mlody_bajt = convert_Byte_to_Int(bufer[0]);
+                stary_bajt = convert_Byte_to_Int(bufer[1]);
                 CRC = CalcCRC16(bufer, 2);
-                CRC_parse = parse_bytes(convertByte(bufer[2]), convertByte(bufer[3]));
+                CRC_parse = parse_bytes(convert_Byte_to_Int(bufer[2]), convert_Byte_to_Int(bufer[3]));
                 if(CRC==CRC_parse) {
                     Log.e("mlody_bajt:", Integer.toString(CRC));
                     Log.e("stary_bajt:", Integer.toString(CRC_parse));
                     Log.d("bytes:", Integer.toString(bytes_all));
                     point = return_voltage();
                     bytes_all = 0;
-                    //nadawaj = true;
                 }else
                     Error_count++;
 
@@ -71,7 +70,6 @@ import android.util.Log;
                 Log.e("stary_bajt:", Integer.toString(CRC_parse));
                 Log.d("bytes:", Integer.toString(bytes_all));
                 bytes_all = 0;
-               // nadawaj = true;
             }
 
         }
@@ -90,7 +88,7 @@ import android.util.Log;
 
     public int parse_bytes(int mlody, int stary) {
 
-        return ((stary << 8) | (mlody));
+        return 0xFFFF&((stary << 8) | (mlody));
 
 
     }
@@ -107,7 +105,7 @@ import android.util.Log;
         return parse_bytes(mlody_bajt,stary_bajt)*(3.3 / 4095);
     }
 
-    public int convertByte(byte b) {
+    public int convert_Byte_to_Int(byte b) {
         if (b < 0) {
             return b + 256;
         } else return b;
@@ -115,9 +113,9 @@ import android.util.Log;
 
     public int CalcCRC16(byte[] data_array, int data_lenght) {
         int crc = 0xFFFF;
-        byte[] data = data_array;
+        //byte[] data = data_array;
         for (int i = 0; i < data_lenght; i++) {
-            crc ^= (convertByte(data[i])) << 8;
+            crc ^= (convert_Byte_to_Int(data_array[i])) << 8;
             crc = crc & 0x0000FFFF;
             for (int j = 0; j < 8; j++) {
                 if ((crc & 0x8000) > 0) {
