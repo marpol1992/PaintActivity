@@ -48,7 +48,7 @@ public class realtime extends ActionBarActivity {
     public Button start;
     boolean START_GRAPH = false;
     ProcessingFrame processing_Frame = new ProcessingFrame();
-
+    SendDataFrame sendDataFrame = new SendDataFrame();
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
     Handler mHandler;
@@ -139,6 +139,7 @@ public class realtime extends ActionBarActivity {
         actionBar.setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         processing_Frame.start();
+        SendDataFrame sendDataFrame = new SendDataFrame();
     }
 
 
@@ -186,6 +187,7 @@ public class realtime extends ActionBarActivity {
     public void plus(View view) {
 
         plus_minus = plus_minus + 0.1;
+        Bluetooth.connectedThread.write(2);
     }
 
     public void minus(View view) {
@@ -229,7 +231,7 @@ public class realtime extends ActionBarActivity {
 
         if (START_GRAPH  == true) {
             if (Bluetooth.connectedThread != null) {
-                Bluetooth.connectedThread.write(2);
+                sendDataFrame.Request_to_stopADC();
             }
             start.setText("START");
 
@@ -237,7 +239,8 @@ public class realtime extends ActionBarActivity {
         if (START_GRAPH == false) {
             start.setText("STOP");
             if (Bluetooth.connectedThread != null) {
-                Bluetooth.connectedThread.write(2);
+               // Bluetooth.connectedThread.write(2);
+               sendDataFrame.Request_to_startADC();
             }
         }
         START_GRAPH = !START_GRAPH;

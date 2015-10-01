@@ -22,6 +22,7 @@ import android.util.Log;
     public int  Error_count;
     protected static final int SUCCESS_CONNECT = 0;
     protected static final int DISCONECT = 2;
+    Calculculations calculations = new Calculculations();
     static Handler mHandler = new Handler();
     public static void get_handler(Handler handler){mHandler = handler;}
     Handler hHandler;{
@@ -53,10 +54,10 @@ import android.util.Log;
     public void run() {
         while(SET_THREAD){
             if ((bytes_all>=4)) {
-                mlody_bajt = convert_Byte_to_Int(bufer[0]);
-                stary_bajt = convert_Byte_to_Int(bufer[1]);
-                CRC = CalcCRC16(bufer, 2);
-                CRC_parse = parse_bytes(convert_Byte_to_Int(bufer[2]), convert_Byte_to_Int(bufer[3]));
+                mlody_bajt = calculations.convert_Byte_to_Int(bufer[0]);
+                stary_bajt = calculations.convert_Byte_to_Int(bufer[1]);
+                CRC = calculations.CalcCRC16(bufer, 2);
+                CRC_parse = parse_bytes(calculations.convert_Byte_to_Int(bufer[2]),calculations.convert_Byte_to_Int(bufer[3]));
                 if(CRC==CRC_parse) {
                     Log.e("mlody_bajt:", Integer.toString(CRC));
                     Log.e("stary_bajt:", Integer.toString(CRC_parse));
@@ -105,7 +106,7 @@ import android.util.Log;
         return parse_bytes(mlody_bajt,stary_bajt)*(3.3 / 4095);
     }
 
-    public int convert_Byte_to_Int(byte b) {
+ /*   public int convert_Byte_to_Int(byte b) {
         if (b < 0) {
             return b + 256;
         } else return b;
@@ -129,7 +130,7 @@ import android.util.Log;
             }
         }
         return  crc & 0x0000FFFF;
-    }
+    }*/
 
     public void SET_THREAD(boolean b) {
         SET_THREAD = b;

@@ -152,7 +152,7 @@ public class Bluetooth extends Activity implements OnItemClickListener {
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         registerReceiver(receiver, filter);
         filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-;
+
     }
 
     @Override
