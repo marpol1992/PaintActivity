@@ -2,9 +2,8 @@ package com.example.marek.paintactivity;
 
 import java.util.Iterator;
 
-/**
- * Created by marek on 2015-09-30.
- */
+// Created by marek on 2015-09-30.
+
 public class SendDataFrame {
     private final byte Header_frame        = (byte)0xFF;
     private int Lenght_Data;
@@ -21,10 +20,11 @@ public class SendDataFrame {
         Frame[2] =(byte)Lenght_Data;
         Frame[3] = calculations.LSB_part_of_Bajt(calculations.CalcCRC16(Frame, 3));
         Frame[4] = calculations.MSB_part_of_Bajt(calculations.CalcCRC16(Frame, 3));
-        for(byte frame: Frame){
+        Bluetooth.connectedThread.write(Frame);
+/*        for(byte frame: Frame){
             Bluetooth.connectedThread.write(frame);
         }
-       /* for (Iterator<String> i = Frame.iterator(); i.hasNext(); ){
+        for (Iterator<String> i = Frame.iterator(); i.hasNext(); ){
 
         }*/
     }
