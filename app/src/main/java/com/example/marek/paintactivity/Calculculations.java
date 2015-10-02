@@ -1,13 +1,12 @@
 package com.example.marek.paintactivity;
 
-/**
- * Created by marek on 2015-09-30.
- */
+// Created by marek on 2015-09-30.
+
 public class Calculculations {
 
-   public void Calculculations(){
+ /*  public void Calculculations(){
 
-   }
+   }*/
     public int CalcCRC16(byte[] data_array, int data_lenght) {
         int crc = 0xFFFF;
         //byte[] data = data_array;
@@ -32,13 +31,13 @@ public class Calculculations {
             return b + 256;
         } else return b;
     }
-    byte  MSB_part_of_Bajt(int licznik){
+   public byte MSB_part_of_Bajt(int licznik){
 
 
         return(byte)((licznik>>8) & 0x000000FF);
     }
 
-    byte  LSB_part_of_Bajt(int licznik){
+  public byte LSB_part_of_Bajt(int licznik){
 
         return (byte)(licznik & 0x000000FF);
     }
