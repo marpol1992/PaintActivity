@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 public class SendDataFrame {
     private final byte Header_frame        = (byte)0xFF;
-    private int Lenght_Data;
+    private int Lenght_Data = 0;
     private byte[] Data;
     private final byte Command_to_startADC = 0x04;
     private final byte Command_to_stopADC  = 0x05;
@@ -17,10 +17,16 @@ public class SendDataFrame {
     }
     public void Request_to_startADC(){
         Frame[1] = Command_to_startADC;
-        Frame[2] =(byte)Lenght_Data;
-        Frame[3] = calculations.LSB_part_of_Bajt(calculations.CalcCRC16(Frame, 3));
-        Frame[4] = calculations.MSB_part_of_Bajt(calculations.CalcCRC16(Frame, 3));
+        Frame[2] = calculations.MSB_part_of_Bajt(Lenght_Data);
+        Frame[3] = calculations.LSB_part_of_Bajt(Lenght_Data);
+        Frame[4] = calculations.MSB_part_of_Bajt(calculations.CalcCRC16(Frame, 4));
+        Frame[5] = calculations.LSB_part_of_Bajt(calculations.CalcCRC16(Frame, 4));
         Bluetooth.connectedThread.write(Frame);
+        Bluetooth.connectedThread.write(Frame);
+        Bluetooth.connectedThread.write(Frame);
+        Bluetooth.connectedThread.write(Frame);
+        Bluetooth.connectedThread.write(Frame);
+
 /*        for(byte frame: Frame){
             Bluetooth.connectedThread.write(frame);
         }
@@ -30,9 +36,13 @@ public class SendDataFrame {
     }
     public void Request_to_stopADC(){
         Frame[1] = Command_to_stopADC;
-        Frame[2] =(byte)Lenght_Data;
-        Frame[3] = calculations.LSB_part_of_Bajt(calculations.CalcCRC16(Frame,3));
-        Frame[4] = calculations.MSB_part_of_Bajt(calculations.CalcCRC16(Frame, 3));
+        Frame[2] = calculations.MSB_part_of_Bajt(Lenght_Data);
+        Frame[3] = calculations.LSB_part_of_Bajt(Lenght_Data);
+        Frame[4] = calculations.MSB_part_of_Bajt(calculations.CalcCRC16(Frame, 4));
+        Frame[5] = calculations.LSB_part_of_Bajt(calculations.CalcCRC16(Frame, 4));
+        Bluetooth.connectedThread.write(Frame);
+        Bluetooth.connectedThread.write(Frame);
+        Bluetooth.connectedThread.write(Frame);
         Bluetooth.connectedThread.write(Frame);
     }
 
