@@ -3,6 +3,7 @@ package com.example.marek.paintactivity;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.ViewDebug;
 
 /*
   Created by marek on 2015-09-16.
@@ -11,7 +12,8 @@ import android.util.Log;
 
     public byte[] readBuffer;
     public int bytes;
-    public byte[] bufer = new byte[1900];
+    public byte[] bufer = new byte[300];
+    public double[]  graph_point = new double[150];
     public int stary_bajt;
     public int mlody_bajt;
     public int bytes_all;
@@ -22,6 +24,7 @@ import android.util.Log;
     public int  Error_count;
     protected static final int SUCCESS_CONNECT = 0;
     protected static final int DISCONECT = 2;
+    public boolean flaga = false;
     Calculculations calculations = new Calculculations();
     static Handler mHandler = new Handler();
     public static void get_handler(Handler handler){mHandler = handler;}
@@ -53,24 +56,26 @@ import android.util.Log;
     @Override
     public void run() {
         while(SET_THREAD){
-            if ((bytes_all>=4)) {
-                mlody_bajt = calculations.convert_Byte_to_Int(bufer[0]);
-                stary_bajt = calculations.convert_Byte_to_Int(bufer[1]);
-                CRC = calculations.CalcCRC16(bufer, 2);
-                CRC_parse = parse_bytes(calculations.convert_Byte_to_Int(bufer[2]),calculations.convert_Byte_to_Int(bufer[3]));
-                if(CRC==CRC_parse) {
-                    Log.e("mlody_bajt:", Integer.toString(CRC));
-                    Log.e("stary_bajt:", Integer.toString(CRC_parse));
-                    Log.d("bytes:", Integer.toString(bytes_all));
-                    point = return_voltage();
-                    bytes_all = 0;
-                }else
-                    Error_count++;
-
-                Log.e("mlody_bajt:", Integer.toString(CRC));
-                Log.e("stary_bajt:", Integer.toString(CRC_parse));
-                Log.d("bytes:", Integer.toString(bytes_all));
+            if ((bytes_all>=106)) {
                 bytes_all = 0;
+                CRC = calculations.CalcCRC16(bufer, 104);
+                CRC_parse = parse_bytes(calculations.convert_Byte_to_Int(bufer[105]), calculations.convert_Byte_to_Int(bufer[104]));
+                if(CRC==CRC_parse) {
+                    int counter = 0;
+                for(int i=4;i<104;i+=2){
+                    if((graph_point[counter] = parse_bytes(calculations.convert_Byte_to_Int(bufer[i]),calculations.convert_Byte_to_Int(bufer[i+1]))/2048.0)>1){
+                        graph_point[counter] = 0;
+                    }
+                    Log.d("point:", Double.toString(graph_point[counter]));
+                    counter++;
+                    Log.d("counter",Integer.toString(i));
+                }
+                    flaga = true;
+                }else{
+                    Error_count++;
+                }
+
+
             }
 
         }
@@ -88,19 +93,9 @@ import android.util.Log;
     }
 
     public int parse_bytes(int mlody, int stary) {
-
-        return 0xFFFF&((stary << 8) | (mlody));
-
-
+         return 0xFFFF&((stary << 8) | (mlody));
     }
-    public double adc(double zam) {
-        if (zam == 0) {
-            return 0;
-        } else {
 
-            return zam * (3.3 / 4095);
-        }
-    }
     public double return_voltage(){
 
         return parse_bytes(mlody_bajt,stary_bajt)*(3.3 / 4095);
