@@ -50,50 +50,6 @@ public class realtime extends ActionBarActivity {
     ProcessingFrame processing_Frame = new ProcessingFrame();
     SendDataFrame sendDataFrame = new SendDataFrame();
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-    Handler mHandler;
-
-    {
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                //TODO Auto-generated method stub
-                super.handleMessage(msg);
-                switch (msg.what) {
-                    case Bluetooth.MESSAGE_READ:
-                        if (Bluetooth.connectedThread != null)  {
-                            processing_Frame.Konstruktor(msg.obj, msg.arg1);
-                        }
-                        ////////////////////ADC=12bit/////////////////////////
-                        read1.setText(Boolean.toString(START_GRAPH));    //Double.toString(round(parse_bytes(),0)))round(rysuj.adc(rysuj.parse_bytes()),3));
-                        read.setText(Integer.toString(processing_Frame.Error_count));
-
-                        break;
-                    case Bluetooth.DISCONECT:
-
-                }
-            }
-
-
-
-
-
-
-
-        };
-    }
-*/
-
-    public int convertByteToInt(byte[] b) {
-        int value = 0;
-        for (int i = 0; i < b.length; i++) {
-            int n = (b[i] < 0 ? (int) b[i] + 256 : (int) b[i]) << (8 * i);
-            value += n;
-        }
-        return value;
-    }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +72,7 @@ public class realtime extends ActionBarActivity {
         graph2.getViewport().setMaxX(100);
         graph2.getViewport().setYAxisBoundsManual(true);
         graph2.getViewport().setMinY(0);
-        graph2.getViewport().setMaxY(3.3);
+        graph2.getViewport().setMaxY(1);
         graph2.setTitle("Rejestrator napięcia");
         graph2.setTitleColor(Color.BLACK);
         graph2.setTitleTextSize(50);
@@ -158,13 +114,16 @@ public class realtime extends ActionBarActivity {
             @Override
             public void run() {
 
-                if ((Bluetooth.connectedThread != null) & (START_GRAPH  == true)){
-                        graph2LastXValue += 0.01d;
-
+                if ((Bluetooth.connectedThread != null) & (START_GRAPH  == true) & processing_Frame.flaga == true){
+                    for(int i = 0;i<50;i++){
+                        graph2LastXValue += 0.08d;
+                        nSeries2.appendData(new DataPoint(graph2LastXValue, processing_Frame.graph_point[i]), true, 1000);
+                    }
+                    processing_Frame.flaga = false;
                 }
-                nSeries2.appendData(new DataPoint(graph2LastXValue,processing_Frame.point), true, 1000);
-                read1.setText(Boolean.toString(START_GRAPH));
-                read.setText(Integer.toString(processing_Frame.Error_count));
+
+                read1.setText(Boolean.toString(processing_Frame.flaga));
+                //read.setText(Double.toString(processing_Frame.graph_point[i]));
                 nHandler.postDelayed(this, 1);
             }
         };
@@ -175,7 +134,7 @@ public class realtime extends ActionBarActivity {
     public void onPause() {
         super.onPause();
         if((START_GRAPH  == true) & (Bluetooth.connectedThread != null)) {
-             Bluetooth.connectedThread.write(2);
+            sendDataFrame.Request_to_stopADC();
         }
         nHandler.removeCallbacks(nTimer2);
         processing_Frame.SET_THREAD(false);
@@ -185,9 +144,7 @@ public class realtime extends ActionBarActivity {
 
 
     public void plus(View view) {
-
         plus_minus = plus_minus + 0.1;
-        Bluetooth.connectedThread.write(2);
     }
 
     public void minus(View view) {
@@ -199,7 +156,6 @@ public class realtime extends ActionBarActivity {
 
     public void time_plus(View view) {
         czas = czas + 100;
-        finish();
     }
 
     public void time_minus(View view) {
@@ -244,17 +200,6 @@ public class realtime extends ActionBarActivity {
             }
         }
         START_GRAPH = !START_GRAPH;
-    }
-
-    public float round(double f, int places) {
-        float temp = (float) (f * (Math.pow(10, places)));
-
-        temp = (Math.round(temp));
-
-        temp = temp / (int) (Math.pow(10, places));
-
-        return temp;
-
     }
 ////////////////////////////////////////////////////////////////////////////////
 }
