@@ -75,7 +75,8 @@ public class wlacznik_activity extends ActionBarActivity {
 
     }
     public Integer[] numerObrazu={
-            R.mipmap.off,
             R.mipmap.on,
+            R.mipmap.off,
+
     };
 }
